@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnapTikPro | Premium TikTok Downloader</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c1b 0%, #201335 50%, #0b0914 100%);
+            --accent-color: #fe2c55;
+            --accent-hover: #ef1e47;
+            --success-color: #00f2fe;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 650px;
+            background: rgba(20, 16, 35, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #fff, #fe2c55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(254, 44, 85, 0.25);
+        }
+
+        button.action-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(254, 44, 85, 0.3);
+        }
+
+        button.action-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .spinner-box {
+            display: none;
+            margin: 30px auto 10px;
+        }
+
+        .pulse-loader {
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            margin: auto;
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        #status {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .preview-container {
+            display: none;
+            margin: 25px auto;
+            width: 160px;
+            height: 220px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--card-border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: #000;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #results {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            transition: background 0.2s ease;
+        }
+
+        .video-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .video-info {
+            flex: 1;
+        }
+
+        .video-meta {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--success-color);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .video-title {
+            font-size: 0.95rem;
+            color: #fff;
+            line-height: 1.4;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #0b0914;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .download-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.35);
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <h1>SnapTikPro</h1>
+    <div class="tagline">Download TikTok videos instantly with full metadata extraction</div>
+
+    <div class="input-group">
+        <input type="text" id="tiktokUrl" placeholder="Paste target TikTok URL share link here...">
+        <button class="action-btn" onclick="getLinks()">Extract Video Streams</button>
+    </div>
+    
+    <div class="spinner-box" id="spinner">
+        <div class="pulse-loader"></div>
+    </div>
+    <div id="status"></div>
+    
+    <div class="preview-container" id="thumbFrame">
+        <img src="" class="preview-img" id="videoThumb" alt="TikTok Thumbnail Image Cover">
+    </div>
+    
+    <div id="results"></div>
+</div>
+
+<script>
+    async function getLinks() {
+        const url = document.getElementById('tiktokUrl').value;
+        const status = document.getElementById('status');
+        const results = document.getElementById('results');
+        const spinner = document.getElementById('spinner');
+        const thumbFrame = document.getElementById('thumbFrame');
+        const videoThumb = document.getElementById('videoThumb');
+        
+        results.innerHTML = "";
+        thumbFrame.style.display = "none";
+        videoThumb.src = "";
+
+        if (!url) { 
+            status.innerHTML = "<span style='color: #fe2c55;'>Please enter a valid URL.</span>"; 
+            return; 
+        }
+        
+        status.innerHTML = "Analyzing TikTok system signatures...";
+        spinner.style.display = "block";
+        
+        try {
+            const res = await fetch('/get_links', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+            const data = await res.json();
+            
+            spinner.style.display = "none";
+            
+            if (!data.success) {
+                status.innerHTML = `<span style='color: #fe2c55;'>${data.message}</span>`;
+                return;
+            }
+            
+            status.innerHTML = `Successfully resolved ${data.videos.length} unique video qualities!`;
+            
+            if (data.thumbnail) {
+                videoThumb.src = data.thumbnail;
+                thumbFrame.style.display = "block";
+            }
+
+            data.videos.forEach((video) => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                
+                let cleanCaption = video.caption ? video.caption : "TikTok Video Stream";
+
+                card.innerHTML = `
+                    <div class="video-info">
+                        <div class="video-meta">Resolution Profile: ${video.resolution}</div>
+                        <div class="video-title">${cleanCaption}</div>
+                    </div>
+                    <button class="download-btn" onclick="triggerDownload('${btoa(unescape(encodeURIComponent(video.url)))}', '${btoa(unescape(encodeURIComponent(video.caption)))}')">
+                        Get MP4
+                    </button>
+                `;
+                results.appendChild(card);
+            });
+        } catch (e) {
+            spinner.style.display = "none";
+            status.innerHTML = "<span style='color: #fe2c55;'>Failed to reach backend service.</span>";
+        }
+    }
+
+    async function triggerDownload(encodedUrl, encodedCaption) {
+        const url = decodeURIComponent(escape(atob(encodedUrl)));
+        const caption = decodeURIComponent(escape(atob(encodedCaption)));
+        const status = document.getElementById('status');
+        const spinner = document.getElementById('spinner');
+        
+        status.innerHTML = "Fetching binary block stream directly to browser pipeline...";
+        spinner.style.display = "block";
+        
+        try {
+            const res = await fetch('/download_video', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url, caption: caption })
+            });
+            
+            spinner.style.display = "none";
+            
+            if(res.ok) {
+                const blob = await res.blob();
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                
+                const safeFile = caption.replace(/[\\/*?:"<>|]/g, "").trim() || "tiktok_video";
+                a.download = `${safeFile}.mp4`;
+                
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                status.innerHTML = "<span style='color: #00f2fe;'>Download pipeline complete! Saved successfully.</span>";
+            } else {
+                status.innerHTML = "<span style='color: #fe2c55;'>Download target structural error.</span>";
+            }
+        } catch(e) {
+            spinner.style.display = "none";
+            status.innerHTML = "<span style='color: #fe2c55;'>Error downloading stream data.</span>";
+        }
+    }
+</script>
+
+</body>
+</html>
